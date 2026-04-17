@@ -1,0 +1,10 @@
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Local App Data (if any)
+localStorage_dump.json
