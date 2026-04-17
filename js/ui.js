@@ -38,8 +38,14 @@ const UI = (() => {
 
   function avatarClass(rel) {
     const MAP = {
-      Self: 'av-self', Husband: 'av-husband',
-      Wife: 'av-wife', Child: 'av-child', Other: 'av-other'
+      Myself: 'av-self', Husband: 'av-husband',
+      Wife: 'av-wife', Child: 'av-child',
+      Father: 'av-husband', Mother: 'av-wife',
+      Brother: 'av-husband', Sister: 'av-wife',
+      Cousin: 'av-other', Nephew: 'av-child',
+      Niece: 'av-child', Aunt: 'av-wife',
+      Uncle: 'av-husband', Grandfather: 'av-husband',
+      Grandmother: 'av-wife'
     };
     return MAP[rel] || 'av-default';
   }
@@ -116,7 +122,7 @@ const UI = (() => {
 
     const initials  = member.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
     const progress  = calcYearProgress(member);
-    const relBadge  = (member.relationship && member.relationship !== 'Self')
+    const relBadge  = (member.relationship && member.relationship !== 'Myself')
       ? `<span class="rel-badge">${escapeHtml(member.relationship)}</span>` : '';
     const idText    = member.nhiaId ? `ID: ${escapeHtml(member.nhiaId)}` : 'ID: Unknown';
 

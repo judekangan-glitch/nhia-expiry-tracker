@@ -200,7 +200,7 @@ const App = (() => {
     document.getElementById('form-title').textContent   = 'Edit Member';
     document.getElementById('field-name').value         = member.name;
     document.getElementById('field-phone').value        = member.phone;
-    document.getElementById('field-relationship').value = member.relationship || 'Self';
+    document.getElementById('field-relationship').value = member.relationship || 'Myself';
     document.getElementById('field-nhia-id').value      = member.nhiaId || '';
     // Populate 3-field date picker
     if (member.registrationDate) {
