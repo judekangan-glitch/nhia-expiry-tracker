@@ -10,7 +10,7 @@ const UI = (() => {
   function formatDate(isoDate) {
     if (!isoDate) return '—';
     const d = new Date(isoDate + 'T00:00:00');
-    return d.toLocaleDateString('en-NG', { day: '2-digit', month: 'short', year: 'numeric' });
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   function formatDays(days) {
