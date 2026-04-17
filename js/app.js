@@ -291,23 +291,31 @@ const App = (() => {
   function loadSettings() {
     const s = StorageService.getSettings();
     document.getElementById('settings-phone').value = s.phone || '';
+    _applyPhoneView(s.phone);
+  }
+
+  function _applyPhoneView(phone) {
+    const displayView = document.getElementById('phone-display-view');
+    const editView    = document.getElementById('phone-edit-view');
+    if (phone) {
+      document.getElementById('phone-display-number').textContent = phone;
+      displayView.hidden = false;
+      editView.hidden    = true;
+    } else {
+      displayView.hidden = true;
+      editView.hidden    = false;
+    }
   }
 
   function saveSettings() {
     const phone = document.getElementById('settings-phone').value.trim();
+    if (!phone) {
+      UI.showToast('Please enter a phone number first.', 'error');
+      return;
+    }
     StorageService.saveSettings({ phone });
-    UI.showToast('Settings saved.');
-    
-    // Visual feedback on button
-    const btn = document.getElementById('btn-save-settings');
-    const originalText = btn.textContent;
-    btn.textContent = 'Saved ✓';
-    btn.style.background = 'var(--grad-active)';
-    
-    setTimeout(() => {
-      btn.textContent = originalText;
-      btn.style.background = '';
-    }, 2000);
+    UI.showToast('Phone number saved! ✓');
+    _applyPhoneView(phone);
   }
 
   async function handleResetData() {
@@ -431,6 +439,15 @@ const App = (() => {
     // Settings
     document.getElementById('btn-save-settings').addEventListener('click', saveSettings);
     document.getElementById('btn-reset-data').addEventListener('click', handleResetData);
+
+    // Change phone button: switch back to edit view
+    document.getElementById('btn-edit-phone').addEventListener('click', () => {
+      const s = StorageService.getSettings();
+      document.getElementById('settings-phone').value = s.phone || '';
+      document.getElementById('phone-display-view').hidden = true;
+      document.getElementById('phone-edit-view').hidden    = false;
+      document.getElementById('settings-phone').focus();
+    });
   }
 
   // ══════════════════════════════════════════════════════
