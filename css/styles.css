@@ -735,6 +735,8 @@ a { text-decoration: none; color: inherit; }
 }
 
 .form-input::placeholder { color: var(--t3); }
+select.form-input:invalid { color: var(--t3); }
+select.form-input option { color: var(--t1); }
 .form-input:disabled { opacity: 0.45; background: #F1F5F9; }
 
 .no-id-row {
@@ -1201,6 +1203,8 @@ a { text-decoration: none; color: inherit; }
   color: #E8F1FF;
 }
 [data-theme="dark"] .form-input::placeholder { color: #3A5870; }
+[data-theme="dark"] select.form-input:invalid { color: #3A5870; }
+[data-theme="dark"] select.form-input option { color: #E8F1FF; background: #0C1D2E; }
 [data-theme="dark"] .search-bar { background: #0C1D2E; border-color: rgba(255,255,255,0.07); }
 [data-theme="dark"] #member-search { color: #E8F1FF; }
 [data-theme="dark"] .bottom-nav { background: rgba(6,14,26,0.97); border-top-color: rgba(255,255,255,0.06); }
