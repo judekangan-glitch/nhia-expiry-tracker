@@ -297,6 +297,17 @@ const App = (() => {
     const phone = document.getElementById('settings-phone').value.trim();
     StorageService.saveSettings({ phone });
     UI.showToast('Settings saved.');
+    
+    // Visual feedback on button
+    const btn = document.getElementById('btn-save-settings');
+    const originalText = btn.textContent;
+    btn.textContent = 'Saved ✓';
+    btn.style.background = 'var(--grad-active)';
+    
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+    }, 2000);
   }
 
   async function handleResetData() {
