@@ -185,6 +185,9 @@ const App = (() => {
     editingId = null;
     document.getElementById('form-title').textContent = 'Add Member';
     document.getElementById('member-form').reset();
+    document.getElementById('field-day').value   = '';
+    document.getElementById('field-month').value = '';
+    document.getElementById('field-year').value  = '';
     document.getElementById('field-expiry-preview').textContent = '—';
     document.getElementById('field-nhia-id').disabled = false;
     showScreen('form');
@@ -194,12 +197,18 @@ const App = (() => {
     const member = MembersService.getById(id);
     if (!member) return;
     editingId = id;
-    document.getElementById('form-title').textContent     = 'Edit Member';
-    document.getElementById('field-name').value           = member.name;
-    document.getElementById('field-phone').value          = member.phone;
-    document.getElementById('field-reg-date').value       = member.registrationDate;
-    document.getElementById('field-relationship').value   = member.relationship || 'Self';
-    document.getElementById('field-nhia-id').value        = member.nhiaId || '';
+    document.getElementById('form-title').textContent   = 'Edit Member';
+    document.getElementById('field-name').value         = member.name;
+    document.getElementById('field-phone').value        = member.phone;
+    document.getElementById('field-relationship').value = member.relationship || 'Self';
+    document.getElementById('field-nhia-id').value      = member.nhiaId || '';
+    // Populate 3-field date picker
+    if (member.registrationDate) {
+      const [y, m, d] = member.registrationDate.split('-');
+      document.getElementById('field-day').value   = parseInt(d);
+      document.getElementById('field-month').value = m;
+      document.getElementById('field-year').value  = y;
+    }
     const noId = document.getElementById('field-no-id');
     noId.checked = !member.nhiaId;
     document.getElementById('field-nhia-id').disabled = !member.nhiaId;
@@ -209,12 +218,17 @@ const App = (() => {
 
   function handleFormSubmit(e) {
     e.preventDefault();
-    const name             = document.getElementById('field-name').value.trim();
-    const phone            = document.getElementById('field-phone').value.trim();
-    const registrationDate = document.getElementById('field-reg-date').value;
-    const relationship     = document.getElementById('field-relationship').value;
-    const noId             = document.getElementById('field-no-id').checked;
-    const nhiaId           = noId ? '' : document.getElementById('field-nhia-id').value.trim();
+    const name         = document.getElementById('field-name').value.trim();
+    const phone        = document.getElementById('field-phone').value.trim();
+    const relationship = document.getElementById('field-relationship').value;
+    const noId         = document.getElementById('field-no-id').checked;
+    const nhiaId       = noId ? '' : document.getElementById('field-nhia-id').value.trim();
+
+    // Build ISO date from 3 fields
+    const day   = String(document.getElementById('field-day').value).padStart(2, '0');
+    const month = document.getElementById('field-month').value;
+    const year  = document.getElementById('field-year').value;
+    const registrationDate = (day && month && year) ? `${year}-${month}-${day}` : '';
 
     if (!name || !registrationDate || !phone) {
       UI.showToast('Please fill in all required fields.', 'error');
@@ -348,8 +362,22 @@ const App = (() => {
       if (e.target.checked) nhiaInput.value = '';
     });
 
-    // Expiry preview
-    document.getElementById('field-reg-date').addEventListener('change', updateExpiryPreview);
+    // Expiry preview: fires when any of the 3 date fields change
+    function onDateChange() {
+      const day   = String(document.getElementById('field-day').value).padStart(2, '0');
+      const month = document.getElementById('field-month').value;
+      const year  = document.getElementById('field-year').value;
+      if (day && month && year) {
+        const iso = `${year}-${month}-${day}`;
+        document.getElementById('field-expiry-preview').textContent =
+          UI.formatDate(MembersService.calcExpiryDate(iso));
+      } else {
+        document.getElementById('field-expiry-preview').textContent = '—';
+      }
+    }
+    document.getElementById('field-day').addEventListener('input', onDateChange);
+    document.getElementById('field-month').addEventListener('change', onDateChange);
+    document.getElementById('field-year').addEventListener('input', onDateChange);
 
     // Member list delegation (edit / delete / renew)
     document.getElementById('member-list').addEventListener('click', e => {
